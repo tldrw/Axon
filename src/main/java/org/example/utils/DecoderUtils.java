@@ -68,4 +68,65 @@ public class DecoderUtils {
             return "解码失败：" + e.getMessage();
         }
     }
+    
+    // HTML实体解码
+    public static String htmlEntityDecode(String input) {
+        StringBuilder result = new StringBuilder();
+        int i = 0;
+        while (i < input.length()) {
+            if (input.charAt(i) == '&') {
+                // 查找分号位置
+                int semicolonIndex = input.indexOf(';', i);
+                if (semicolonIndex != -1 && semicolonIndex - i <= 10) {
+                    String entity = input.substring(i + 1, semicolonIndex);
+                    
+                    // 处理数字实体 &#123; 或 &#x7B;
+                    if (entity.startsWith("#")) {
+                        try {
+                            int code;
+                            if (entity.length() > 1 && (entity.charAt(1) == 'x' || entity.charAt(1) == 'X')) {
+                                // 十六进制格式 &#xAB;
+                                code = Integer.parseInt(entity.substring(2), 16);
+                            } else {
+                                // 十进制格式 &#123;
+                                code = Integer.parseInt(entity.substring(1));
+                            }
+                            result.append((char) code);
+                            i = semicolonIndex + 1;
+                            continue;
+                        } catch (NumberFormatException e) {
+                            // 解析失败，按原样输出
+                        }
+                    } else {
+                        // 处理命名实体
+                        String decoded = decodeNamedEntity(entity);
+                        if (decoded != null) {
+                            result.append(decoded);
+                            i = semicolonIndex + 1;
+                            continue;
+                        }
+                    }
+                }
+            }
+            result.append(input.charAt(i));
+            i++;
+        }
+        return result.toString();
+    }
+    
+    // 解码HTML命名实体
+    private static String decodeNamedEntity(String entity) {
+        switch (entity) {
+            case "lt": return "<";
+            case "gt": return ">";
+            case "amp": return "&";
+            case "quot": return "\"";
+            case "apos": return "'";
+            case "nbsp": return "\u00A0";
+            case "copy": return "©";
+            case "reg": return "®";
+            case "trade": return "™";
+            default: return null;
+        }
+    }
 }

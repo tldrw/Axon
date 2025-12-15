@@ -82,8 +82,19 @@ public class EncoderUtils {
         }
     }
     
-    // UTF-16LE编码（16进制）
+    // UTF-16LE编码（返回原始字符串，不转hex）
     public static String utf16leEncode(String input) {
+        try {
+            byte[] bytes = input.getBytes("UTF-16LE");
+            // 直接返回原始字节序列的字符串表示
+            return new String(bytes, "ISO-8859-1"); // 使用ISO-8859-1保持字节不变
+        } catch (Exception e) {
+            return "编码失败：" + e.getMessage();
+        }
+    }
+    
+    // UTF-16LE编码转hex（16进制）
+    public static String utf16leEncodeToHex(String input) {
         try {
             byte[] bytes = input.getBytes("UTF-16LE");
             StringBuilder result = new StringBuilder();
@@ -94,6 +105,103 @@ public class EncoderUtils {
         } catch (Exception e) {
             return "编码失败：" + e.getMessage();
         }
+    }
+    
+    /**
+     * 将hex字符串格式化为不同格式
+     * @param hexString hex字符串（如: "48656c6c6f"）
+     * @param format 格式类型
+     * @return 格式化后的字符串
+     */
+    public static String formatHexString(String hexString, HexFormat format) {
+        if (hexString == null || hexString.isEmpty()) {
+            return hexString;
+        }
+        
+        // 移除可能存在的空格和分隔符，确保是纯hex字符串
+        String cleanHex = hexString.replaceAll("[^0-9a-fA-F]", "");
+        
+        if (cleanHex.isEmpty()) {
+            return hexString;
+        }
+        
+        StringBuilder result = new StringBuilder();
+        
+        switch (format) {
+            case FALSE:
+                // 默认：不启用hex格式输出
+                return cleanHex;
+                
+            case SPACE:
+                // 空格分隔：48 65 6c 6c 6f
+                for (int i = 0; i < cleanHex.length(); i += 2) {
+                    if (i > 0) result.append(" ");
+                    result.append(cleanHex.substring(i, Math.min(i + 2, cleanHex.length())));
+                }
+                return result.toString();
+                
+            case COMMA:
+                // 逗号分隔：48,65,6c,6c,6f
+                for (int i = 0; i < cleanHex.length(); i += 2) {
+                    if (i > 0) result.append(",");
+                    result.append(cleanHex.substring(i, Math.min(i + 2, cleanHex.length())));
+                }
+                return result.toString();
+                
+            case SEMICOLON:
+                // 分号分隔：48;65;6c;6c;6f
+                for (int i = 0; i < cleanHex.length(); i += 2) {
+                    if (i > 0) result.append(";");
+                    result.append(cleanHex.substring(i, Math.min(i + 2, cleanHex.length())));
+                }
+                return result.toString();
+                
+            case PREFIX_0X:
+                // 0x前缀：0x480x650x6c0x6c0x6f
+                for (int i = 0; i < cleanHex.length(); i += 2) {
+                    result.append("0x");
+                    result.append(cleanHex.substring(i, Math.min(i + 2, cleanHex.length())));
+                }
+                return result.toString();
+                
+            case PREFIX_0X_COMMA:
+                // 0x前缀逗号分隔：0x48,0x65,0x6c,0x6c,0x6f
+                for (int i = 0; i < cleanHex.length(); i += 2) {
+                    if (i > 0) result.append(",");
+                    result.append("0x");
+                    result.append(cleanHex.substring(i, Math.min(i + 2, cleanHex.length())));
+                }
+                return result.toString();
+                
+            case PREFIX_BACKSLASH_X:
+                // \x前缀：\x48\x65\x6c\x6c\x6f
+                for (int i = 0; i < cleanHex.length(); i += 2) {
+                    result.append("\\x");
+                    result.append(cleanHex.substring(i, Math.min(i + 2, cleanHex.length())));
+                }
+                return result.toString();
+                
+            case NONE:
+                // 无格式：48656c6c6f
+                return cleanHex;
+                
+            default:
+                return cleanHex;
+        }
+    }
+    
+    /**
+     * Hex格式化类型枚举
+     */
+    public enum HexFormat {
+        FALSE,                   // 默认：不启用
+        SPACE,                   // 空格分隔
+        COMMA,                   // 逗号分隔
+        SEMICOLON,               // 分号分隔
+        PREFIX_0X,               // 0x前缀（无分隔符）
+        PREFIX_0X_COMMA,         // 0x前缀（逗号分隔）
+        PREFIX_BACKSLASH_X,      // \x前缀
+        NONE                     // 无格式
     }
     
     // HEX编码（16进制编码）
@@ -108,6 +216,24 @@ public class EncoderUtils {
         } catch (Exception e) {
             return "编码失败：" + e.getMessage();
         }
+    }
+    
+    // HTML实体编码
+    public static String htmlEntityEncode(String input) {
+        StringBuilder result = new StringBuilder();
+        for (char c : input.toCharArray()) {
+            if (c > 127 || isHtmlSpecialChar(c)) {
+                // 对非ASCII字符和HTML特殊字符进行实体编码
+                result.append("&#").append((int) c).append(";");
+            } else {
+                result.append(c);
+            }
+        }
+        return result.toString();
+    }
+    
+    private static boolean isHtmlSpecialChar(char c) {
+        return c == '<' || c == '>' || c == '&' || c == '"' || c == '\'';
     }
     
     // Unicode编码（JSON键值编码）- 只对JSON中的键和值进行Unicode编码，保持JSON结构

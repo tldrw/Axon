@@ -43,84 +43,90 @@ public class I18n {
     public static String decode() {
         return IS_CHINESE ? "解码" : "Decode";
     }
+
+    public static String format() {
+        return IS_CHINESE ? "格式化" : "Format";
+    }
     
     public static String httpRequestModify() {
         return IS_CHINESE ? "HTTP请求修改" : "HTTP Modify";
     }
     
-    public static String format() {
-        return IS_CHINESE ? "格式化" : "Format";
-    }
-    
     // 编码菜单项
+    public static String base64Encode() {
+        return IS_CHINESE ? "Base64 编码" : "Base64 Encode";
+    }
+
+    public static String hexEncode() {
+        return IS_CHINESE ? "HEX 编码（16进制）" : "HEX Encode";
+    }
+
+    public static String htmlEntityEncode() { return IS_CHINESE ? "HTML 实体编码" : "HTML Entity Encode"; }
+
+    public static String unicodeEncode() {
+        return IS_CHINESE ? "Unicode 编码" : "Unicode Encode";
+    }
+
+    public static String unicodeEncodeIgnoreAscii() {
+        return IS_CHINESE ? "Unicode 编码（忽略ASCII字符）" : "Unicode Encode (Ignore ASCII)";
+    }
+
+    public static String unicodeEncodeJsonValues() {
+        return IS_CHINESE ? "Unicode 编码（JSON键值编码）" : "Unicode Encode (JSON Values)";
+    }
+
     public static String urlEncode() {
-        return IS_CHINESE ? "URL编码" : "URL Encode";
+        return IS_CHINESE ? "URL 编码" : "URL Encode";
     }
     
     public static String urlEncodeSpecial() {
-        return IS_CHINESE ? "URL编码（特殊符号）" : "URL Encode (Special Chars)";
-    }
-    
-    public static String base64Encode() {
-        return IS_CHINESE ? "Base64编码" : "Base64 Encode";
-    }
-    
-    public static String unicodeEncode() {
-        return IS_CHINESE ? "Unicode编码" : "Unicode Encode";
-    }
-    
-    public static String unicodeEncodeIgnoreAscii() {
-        return IS_CHINESE ? "Unicode编码（忽略ASCII字符）" : "Unicode Encode (Ignore ASCII)";
-    }
-    
-    public static String unicodeEncodeJsonValues() {
-        return IS_CHINESE ? "Unicode编码（JSON键值编码）" : "Unicode Encode (JSON Values)";
+        return IS_CHINESE ? "URL 编码（仅特殊符号）" : "URL Encode (Special Chars)";
     }
     
     public static String utf8Encode() {
-        return IS_CHINESE ? "UTF-8编码（16进制）" : "UTF-8 Encode (Hex)";
+        return IS_CHINESE ? "UTF-8 编码" : "UTF-8 Encode";
     }
     
     public static String utf16leEncode() {
-        return IS_CHINESE ? "UTF-16LE编码（16进制）" : "UTF-16LE Encode (Hex)";
-    }
-    
-    public static String hexEncode() {
-        return IS_CHINESE ? "HEX编码（16进制）" : "HEX Encode";
+        return IS_CHINESE ? "UTF-16LE 编码" : "UTF-16LE Encode";
     }
     
     // 解码菜单项
     public static String base64Decode() {
-        return IS_CHINESE ? "Base64解码" : "Base64 Decode";
+        return IS_CHINESE ? "Base64 解码" : "Base64 Decode";
+    }
+
+    public static String hexDecode() {
+        return IS_CHINESE ? "HEX 解码（16进制）" : "HEX Decode";
+    }
+    
+    public static String htmlEntityDecode() {
+        return IS_CHINESE ? "HTML 实体解码" : "HTML Entity Decode";
     }
     
     public static String urlDecode() {
-        return IS_CHINESE ? "URL解码" : "URL Decode";
+        return IS_CHINESE ? "URL 解码" : "URL Decode";
     }
     
     public static String unicodeDecode() {
-        return IS_CHINESE ? "Unicode解码" : "Unicode Decode";
-    }
-    
-    public static String hexDecode() {
-        return IS_CHINESE ? "HEX解码（16进制）" : "HEX Decode";
+        return IS_CHINESE ? "Unicode 解码" : "Unicode Decode";
     }
     
     // HTTP请求修改菜单项
     public static String jsonFormat() {
-        return IS_CHINESE ? "JSON格式化" : "JSON Format";
+        return IS_CHINESE ? "JSON 格式化" : "JSON Format";
     }
     
     public static String jsonCompress() {
-        return IS_CHINESE ? "JSON压缩" : "JSON Compress";
+        return IS_CHINESE ? "JSON 压缩" : "JSON Compress";
     }
     
     public static String xmlFormat() {
-        return IS_CHINESE ? "XML格式化" : "XML Format";
+        return IS_CHINESE ? "XML 格式化" : "XML Format";
     }
     
     public static String xmlCompress() {
-        return IS_CHINESE ? "XML压缩" : "XML Compress";
+        return IS_CHINESE ? "XML 压缩" : "XML Compress";
     }
     
     // HTTP请求转换菜单项
@@ -168,4 +174,39 @@ public class I18n {
     public static String success() {
         return IS_CHINESE ? "成功" : "Success";
     }
+
+    public static String length() { return IS_CHINESE ? "长度" : "Length"; }
+    
+    // Hex格式化选项
+    public static String hexFormatFalse() { return IS_CHINESE ? "不启用" : "False"; }
+    
+    public static String hexFormatSpace() {
+        return IS_CHINESE ? "空格分隔" : "Space";
+    }
+    
+    public static String hexFormatComma() {
+        return IS_CHINESE ? "逗号分隔" : "Comma";
+    }
+    
+    public static String hexFormatSemicolon() {
+        return IS_CHINESE ? "分号分隔" : "Semi-colon";
+    }
+    
+    public static String hexFormat0x() {
+        return IS_CHINESE ? "0x前缀格式" : "0x";
+    }
+    
+    public static String hexFormat0xComma() {
+        return IS_CHINESE ? "0x前缀逗号分隔" : "0x with comma";
+    }
+    
+    public static String hexFormatBackslashX() {
+        return IS_CHINESE ? "\\x前缀格式" : "\\x";
+    }
+    
+    public static String hexFormatNone() {
+        return IS_CHINESE ? "无格式" : "None";
+    }
+
+    public static String hexOutputLabel() { return IS_CHINESE ? "Hex输出：" : "Hex Output:"; }
 }

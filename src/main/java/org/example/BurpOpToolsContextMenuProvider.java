@@ -47,28 +47,32 @@ public class BurpOpToolsContextMenuProvider implements ContextMenuItemsProvider 
         JMenu encodeMenu = new JMenu(I18n.encode());
         encodeMenu.add(createMenuItem(I18n.base64Encode(), text, t -> EncoderUtils.base64Encode(t), event));
         encodeMenu.add(createMenuItem(I18n.hexEncode(), text, t -> EncoderUtils.hexEncode(t), event));
+        encodeMenu.add(createMenuItem(I18n.htmlEntityEncode(), text, t -> EncoderUtils.htmlEntityEncode(t), event));
         encodeMenu.add(createMenuItem(I18n.unicodeEncode(), text, t -> EncoderUtils.unicodeEncode(t), event));
         encodeMenu.add(createMenuItem(I18n.unicodeEncodeIgnoreAscii(), text, t -> EncoderUtils.unicodeEncodeIgnoreAscii(t), event));
         encodeMenu.add(createMenuItem(I18n.unicodeEncodeJsonValues(), text, t -> EncoderUtils.unicodeEncodeJsonValues(t), event));
         encodeMenu.add(createMenuItem(I18n.urlEncode(), text, t -> EncoderUtils.urlEncode(t), event));
         encodeMenu.add(createMenuItem(I18n.urlEncodeSpecial(), text, t -> EncoderUtils.urlEncodeSpecial(t), event));
-        encodeMenu.add(createMenuItem(I18n.utf8Encode(), text, t -> EncoderUtils.utf8Encode(t), event));
-        encodeMenu.add(createMenuItem(I18n.utf16leEncode(), text, t -> EncoderUtils.utf16leEncode(t), event));
+        // UTF-8编码使用特殊的预览对话框，支持hex格式化
+        encodeMenu.add(createUtf8MenuItem(I18n.utf8Encode(), text, event));
+        // UTF-16LE编码使用特殊的预览对话框，支持hex格式化
+        encodeMenu.add(createUtf16MenuItem(I18n.utf16leEncode(), text, event));
         
         // 解码菜单
         JMenu decodeMenu = new JMenu(I18n.decode());
         decodeMenu.add(createMenuItem(I18n.base64Decode(), text, t -> DecoderUtils.base64Decode(t), event));
         decodeMenu.add(createMenuItem(I18n.hexDecode(), text, t -> DecoderUtils.hexDecode(t), event));
+        decodeMenu.add(createMenuItem(I18n.htmlEntityDecode(), text, t -> DecoderUtils.htmlEntityDecode(t), event));
         decodeMenu.add(createMenuItem(I18n.unicodeDecode(), text, t -> DecoderUtils.unicodeDecode(t), event));
         decodeMenu.add(createMenuItem(I18n.urlDecode(), text, t -> DecoderUtils.urlDecode(t), event));
 
         // 格式化子菜单
         JMenu formatMenu = new JMenu(I18n.format());
-        formatMenu.add(createMenuItem(I18n.jsonCompress(), text, t -> JsonProcessor.compress(t), event));
         formatMenu.add(createMenuItem(I18n.jsonFormat(), text, t -> JsonProcessor.format(t), event));
+        formatMenu.add(createMenuItem(I18n.jsonCompress(), text, t -> JsonProcessor.compress(t), event));
         formatMenu.addSeparator();
-        formatMenu.add(createMenuItem(I18n.xmlCompress(), text, t -> XmlProcessor.compress(t), event));
         formatMenu.add(createMenuItem(I18n.xmlFormat(), text, t -> XmlProcessor.format(t), event));
+        formatMenu.add(createMenuItem(I18n.xmlCompress(), text, t -> XmlProcessor.compress(t), event));
         
         // HTTP请求修改菜单（直接修改，不经过预览窗口）
         JMenu httpMenu = new JMenu(I18n.httpRequestModify());
@@ -105,6 +109,31 @@ public class BurpOpToolsContextMenuProvider implements ContextMenuItemsProvider 
     }
     
     /**
+     * 为UTF-8编码创建特殊的菜单项，支持hex格式化
+     */
+    private JMenuItem createUtf8MenuItem(String name, String originalText, ContextMenuEvent event) {
+        JMenuItem menuItem = new JMenuItem(name);
+        menuItem.addActionListener(e -> {
+            // 默认使用\x前缀格式
+            String processedText = EncoderUtils.utf8Encode(originalText);
+            showUtf8PreviewDialog(name, originalText, processedText, event);
+        });
+        return menuItem;
+    }
+    
+    /**
+     * 为UTF-16LE编码创建特殊的菜单项，支持hex格式化
+     */
+    private JMenuItem createUtf16MenuItem(String name, String originalText, ContextMenuEvent event) {
+        JMenuItem menuItem = new JMenuItem(name);
+        menuItem.addActionListener(e -> {
+            String processedText = EncoderUtils.utf16leEncode(originalText);
+            showUtf16PreviewDialog(name, originalText, processedText, event);
+        });
+        return menuItem;
+    }
+    
+    /**
      * 创建HTTP请求修改菜单项（直接修改，不经过预览窗口）
      */
     private JMenuItem createHttpRequestMenuItem(String name, TextProcessor processor, ContextMenuEvent event) {
@@ -118,6 +147,119 @@ public class BurpOpToolsContextMenuProvider implements ContextMenuItemsProvider 
     private void showPreviewDialog(String title, String beforeText, String afterText, ContextMenuEvent event) {
         SwingUtilities.invokeLater(() -> {
             PreviewDialog dialog = new PreviewDialog(null, title, beforeText, afterText);
+            dialog.setVisible(true);
+            
+            if (dialog.isReplaced()) {
+                replaceSelectedText(event, dialog.getResultText());
+            }
+        });
+    }
+    
+    /**
+     * 显示UTF-8编码的预览对话框，支持hex格式化
+     */
+    private void showUtf8PreviewDialog(String title, String beforeText, String afterText, ContextMenuEvent event) {
+        SwingUtilities.invokeLater(() -> {
+            // UTF-8的hex格式选项（默认\x前缀）
+            String[] utf8HexOptions = new String[]{
+                I18n.hexFormatSpace(),
+                I18n.hexFormatComma(),
+                I18n.hexFormatSemicolon(),
+                I18n.hexFormat0x(),
+                I18n.hexFormat0xComma(),
+                I18n.hexFormatBackslashX(),
+                I18n.hexFormatNone()
+            };
+            
+            // 索引到格式的映射（UTF-8版本）
+            java.util.function.Function<Integer, EncoderUtils.HexFormat> utf8IndexMapper = index -> {
+                switch (index) {
+                    case 0: return EncoderUtils.HexFormat.SPACE;
+                    case 1: return EncoderUtils.HexFormat.COMMA;
+                    case 2: return EncoderUtils.HexFormat.SEMICOLON;
+                    case 3: return EncoderUtils.HexFormat.PREFIX_0X;
+                    case 4: return EncoderUtils.HexFormat.PREFIX_0X_COMMA;
+                    case 5: return EncoderUtils.HexFormat.PREFIX_BACKSLASH_X;
+                    case 6: return EncoderUtils.HexFormat.NONE;
+                    default: return EncoderUtils.HexFormat.PREFIX_BACKSLASH_X;
+                }
+            };
+            
+            PreviewDialog dialog = new PreviewDialog(
+                null,
+                title,
+                beforeText,
+                afterText,
+                utf8HexOptions,
+                utf8IndexMapper,
+                5, // 默认选中\x（索引5）
+                (originalText, format) -> {
+                    // hex格式化器
+                    String hexString = EncoderUtils.hexEncode(beforeText);
+                    return EncoderUtils.formatHexString(hexString, format);
+                }
+            );
+            dialog.setVisible(true);
+            
+            if (dialog.isReplaced()) {
+                replaceSelectedText(event, dialog.getResultText());
+            }
+        });
+    }
+    
+    /**
+     * 显示UTF-16LE编码的预览对话框，支持hex格式化
+     */
+    private void showUtf16PreviewDialog(String title, String beforeText, String afterText, ContextMenuEvent event) {
+        SwingUtilities.invokeLater(() -> {
+            // UTF-16LE的hex格式选项（默认：False，不启用hex输出）
+            String[] utf16HexOptions = new String[]{
+                I18n.hexFormatFalse(),
+                I18n.hexFormatSpace(),
+                I18n.hexFormatComma(),
+                I18n.hexFormatSemicolon(),
+                I18n.hexFormat0x(),
+                I18n.hexFormat0xComma(),
+                I18n.hexFormatBackslashX(),
+                I18n.hexFormatNone()
+            };
+            
+            // 索引到格式的映射（UTF-16LE版本）
+            java.util.function.Function<Integer, EncoderUtils.HexFormat> utf16IndexMapper = index -> {
+                switch (index) {
+                    case 0: return EncoderUtils.HexFormat.FALSE;
+                    case 1: return EncoderUtils.HexFormat.SPACE;
+                    case 2: return EncoderUtils.HexFormat.COMMA;
+                    case 3: return EncoderUtils.HexFormat.SEMICOLON;
+                    case 4: return EncoderUtils.HexFormat.PREFIX_0X;
+                    case 5: return EncoderUtils.HexFormat.PREFIX_0X_COMMA;
+                    case 6: return EncoderUtils.HexFormat.PREFIX_BACKSLASH_X;
+                    case 7: return EncoderUtils.HexFormat.NONE;
+                    default: return EncoderUtils.HexFormat.FALSE;
+                }
+            };
+            
+            // 创建带hex格式化功能的预览对话框
+            PreviewDialog dialog = new PreviewDialog(
+                null, 
+                title, 
+                beforeText, 
+                afterText,
+                utf16HexOptions,
+                utf16IndexMapper,
+                0, // 默认选中False（索引0）
+                (originalText, format) -> {
+                    // hex格式化器
+                    if (format == EncoderUtils.HexFormat.FALSE) {
+                        // False：显示原始的UTF-16LE编码后的字符串（非hex）
+                        return originalText;
+                    } else {
+                        // 其他格式：先转hex，再按格式输出
+                        String hexString = EncoderUtils.utf16leEncodeToHex(beforeText);
+                        return EncoderUtils.formatHexString(hexString, format);
+                    }
+                }
+            );
             dialog.setVisible(true);
             
             if (dialog.isReplaced()) {
