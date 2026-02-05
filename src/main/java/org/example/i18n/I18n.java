@@ -209,4 +209,162 @@ public class I18n {
     }
 
     public static String hexOutputLabel() { return IS_CHINESE ? "Hex输出：" : "Hex Output:"; }
+
+    // 工具联动菜单项
+    public static String toolIntegration() {
+        return IS_CHINESE ? "工具联动" : "Tool Integration";
+    }
+
+    public static String add() {
+        return IS_CHINESE ? "添加" : "Add";
+    }
+
+    public static String edit() {
+        return IS_CHINESE ? "编辑" : "Edit";
+    }
+
+    public static String remove() {
+        return IS_CHINESE ? "删除" : "Remove";
+    }
+
+    public static String enabled() {
+        return IS_CHINESE ? "启用" : "Enabled";
+    }
+
+    public static String name() {
+        return IS_CHINESE ? "名称" : "Name";
+    }
+
+    public static String command() {
+        return IS_CHINESE ? "命令" : "Command";
+    }
+
+    public static String path() {
+        return IS_CHINESE ? "路径" : "Path";
+    }
+
+    public static String directory() {
+        return IS_CHINESE ? "目录" : "Directory";
+    }
+
+    public static String previewBeforeExecution() {
+        return IS_CHINESE ? "执行前预览" : "Preview before execution";
+    }
+
+    public static String confirm() {
+        return IS_CHINESE ? "确定" : "Confirm";
+    }
+
+    public static String warning() {
+        return IS_CHINESE ? "警告" : "Warning";
+    }
+
+    public static String selectItem() {
+        return IS_CHINESE ? "请选择一项" : "Please select an item";
+    }
+
+    public static String confirmDelete() {
+        return IS_CHINESE ? "确定要删除吗？" : "Are you sure you want to delete?";
+    }
+
+    public static String templateVariables() {
+        return IS_CHINESE ? "模板变量" : "Template Variables";
+    }
+
+    public static String example() {
+        return IS_CHINESE ? "示例" : "Example";
+    }
+
+    public static String variable() {
+        return IS_CHINESE ? "变量" : "Variable";
+    }
+
+    public static String description() {
+        return IS_CHINESE ? "描述" : "Description";
+    }
+
+    public static String previewResult() {
+        return IS_CHINESE ? "提取预览 (基于示例URL)" : "Preview Result (Based on example URL)";
+    }
+
+    public static String toolCommandPreview() {
+        return IS_CHINESE ? "工具命令预览" : "Tool Command Preview";
+    }
+    
+    public static String pasteCurlToRepeater() {
+        return IS_CHINESE ? "粘贴 cURL 到 Repeater" : "Paste cURL to Repeater";
+    }
+    
+    public static String errorReadClipboard() {
+        return IS_CHINESE ? "无法读取剪贴板" : "Failed to read clipboard";
+    }
+    
+    public static String errorParseCurl() {
+        return IS_CHINESE ? "cURL 解析失败" : "Failed to parse cURL command";
+    }
+
+    public static String run() {
+        return IS_CHINESE ? "运行" : "Run";
+    }
+
+    public static String copy() {
+        return IS_CHINESE ? "复制" : "Copy";
+    }
+    public static String clear() {
+        return IS_CHINESE ? "清空" : "Clear";
+    }
+
+    // Encoder Panel
+    public static String encoderTab() { return IS_CHINESE ? "编码解码" : "Encoder/Decoder"; }
+    public static String sendToEncoder() { return IS_CHINESE ? "发送到编码器" : "Send to Encoder"; }
+    public static String input() { return IS_CHINESE ? "输入" : "Input"; }
+    public static String output() { return IS_CHINESE ? "输出" : "Output"; }
+    public static String options() { return IS_CHINESE ? "选项" : "Options"; }
+    public static String encodeBtn() { return IS_CHINESE ? "编码" : "Encode"; }
+    public static String decodeBtn() { return IS_CHINESE ? "解码" : "Decode"; }
+    
+    // Processor Options
+    public static String optUrlSafe() { return IS_CHINESE ? "URL 安全 (URL Safe)" : "URL Safe"; }
+    public static String optEncodeAllChars() { return IS_CHINESE ? "编码所有字符" : "Encode all characters"; }
+    public static String optSpecialCharsOnly() { return IS_CHINESE ? "仅特殊符号" : "Special characters only"; }
+    
+    public static String optFormat() { return IS_CHINESE ? "编码格式" : "Format"; }
+    public static String fmtHtmlDecimal() { return IS_CHINESE ? "10进制" : "Decimal"; }
+    public static String fmtHtmlHex() { return IS_CHINESE ? "16进制" : "Hex"; }
+    
+    public static String optIgnoreAscii() { return IS_CHINESE ? "忽略 ASCII" : "Ignore ASCII"; }
+
+    public static String fmtBackslashX() { return IS_CHINESE ? "\\xXX" : "\\xXX"; }
+    public static String fmtPercent() { return IS_CHINESE ? "%XX" : "%XX"; }
+    public static String fmtByteStream() { return IS_CHINESE ? "字节流" : "Byte Stream"; }
+    public static String fmtSequence() { return IS_CHINESE ? "序列" : "Sequence"; }
+    
+    public static String fmtUnicodeDefault() { return IS_CHINESE ? "Unicode 默认模式 \\uXXXX" : "\\uXXXX"; }
+    public static String fmtUnicodeUPlus() { return IS_CHINESE ? "Unicode 编码模式 U+XXXX" : "U+XXXX"; }
+    public static String fmtUnicodeHtmlDec() { return IS_CHINESE ? "HTML实体 10进制 (&#XX;)" : "HTML Decimal (&#XX;)"; }
+    public static String fmtUnicodeHtmlHex() { return IS_CHINESE ? "HTML实体 16进制 (&#xXXXX;)" : "HTML Hex (&#xXXXX;)"; }
+    public static String fmtUnicodeCssHex() { return IS_CHINESE ? "CSS实体 16进制 (\\XXXX)" : "CSS Hex (\\XXXX)"; }
+    
+    public static String optEscapeMode() { return IS_CHINESE ? "转义模式" : "Escape Mode"; }
+    public static String optEscapeAll() { return IS_CHINESE ? "转义所有字符" : "All Characters"; }
+    public static String optEscapeReserved() { return IS_CHINESE ? "仅转义保留字符" : "Reserved Characters Only"; }
+    public static String tipEscapeReserved() { 
+        return IS_CHINESE ? "仅对字符串中保留的HTML符号进行转义（双引号 \", 单引号 ', 和符号 &, 小于号 <, 大于号 >）" : 
+                            "Only escape reserved HTML characters (\", ', &, <, >)"; 
+    }
+    public static String optUseHtmlAbbr() { return IS_CHINESE ? "特殊字符使用HTML缩写 (&lt;)" : "Use HTML Abbreviations for special chars (&lt;)"; }
+    
+    // Template Variable Descriptions
+    public static String varHost() { return IS_CHINESE ? "主机名（不带端口）" : "Host (without port)"; }
+    public static String varPort() { return IS_CHINESE ? "端口" : "Port"; }
+    public static String varProtocol() { return IS_CHINESE ? "协议 (http/https)" : "Protocol (http/https)"; }
+    public static String varUrlFull() { return IS_CHINESE ? "完整URL" : "Full URL"; }
+    public static String varUrlBase() { return IS_CHINESE ? "基础URL (不含路径)" : "Base URL (no path)"; }
+    public static String varUrlNoQuery() { return IS_CHINESE ? "URL (不含查询参数)" : "URL (no query)"; }
+    public static String varUrlPath() { return IS_CHINESE ? "URL路径" : "URL Path"; }
+    public static String varUrlQuery() { return IS_CHINESE ? "URL查询参数" : "URL Query"; }
+    public static String varMethod() { return IS_CHINESE ? "HTTP方法" : "HTTP Method"; }
+    public static String varFile() { return IS_CHINESE ? "请求数据包文件路径" : "Request packet file path"; }
+    public static String varCookie() { return IS_CHINESE ? "Cookie字符串" : "Cookie string"; }
+    public static String varUserAgent() { return IS_CHINESE ? "User-Agent字符串" : "User-Agent string"; }
 }

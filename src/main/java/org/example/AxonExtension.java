@@ -3,29 +3,33 @@ package org.example;
 import burp.api.montoya.BurpExtension;
 import burp.api.montoya.MontoyaApi;
 import org.example.i18n.I18n;
+import org.example.ui.AxonTab;
 
-public class BurpOpToolsExtension implements BurpExtension {
+public class AxonExtension implements BurpExtension {
     
     @Override
     public void initialize(MontoyaApi api) {
-        api.extension().setName("BurpOpTools");
+        api.extension().setName("Axon");
         
         // 注册右键菜单
-        api.userInterface().registerContextMenuItemsProvider(new BurpOpToolsContextMenuProvider(api));
+        api.userInterface().registerContextMenuItemsProvider(new AxonContextMenuProvider(api));
         
+        // 注册主Tab
+        api.userInterface().registerSuiteTab("Axon", new AxonTab());
+
         // 获取版本号
         String version = getVersion();
         
         // 输出加载成功日志
         String language = I18n.isChinese() ? "Chinese" : "English";
-        String banner = "BurpOpTools Plugin Loaded Successfully.\n" +
+        String banner = "Axon Plugin Loaded Successfully.\n" +
                 "\n" +
                 "Language: " + language + "\n" +
                 "Version: " + version + "\n" +
-                "Author: TLDRO\n" +
-                "GitHub: https://github.com/TLDRO/BurpOpTools\n" +
+                "Author: tldrw\n" +
+                "GitHub: https://github.com/tldrw/Axon\n" +
                 "\n" +
-                "Good Hunting!\n";
+                "Happy Hunting!\n";
         api.logging().logToOutput(banner);
     }
     
